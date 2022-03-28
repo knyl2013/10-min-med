@@ -7,6 +7,7 @@ import {
   Text,
   Vibration,
   View,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
@@ -14,6 +15,9 @@ import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { Switch } from "react-native-switch";
 // import BackgroundTimer from "react-native-background-timer";
 
+export function normalize(size) {
+  return Platform.OS == "android" ? size / 2 : size;
+}
 const getYesterday = () => {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
@@ -187,7 +191,7 @@ export default function App() {
         tintColor="#f9013f"
         backgroundColor={isDarkMode ? "#333" : "#eee"}
       >
-        {(fill) => <TimerText />}
+        {() => <TimerText />}
       </AnimatedCircularProgress>
     </View>
   );
@@ -201,7 +205,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   darkTime: {
-    fontSize: 70,
+    fontSize: normalize(70),
     color: "#fff",
   },
   lightContainer: {
@@ -211,16 +215,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   lightTime: {
-    fontSize: 70,
+    fontSize: normalize(70),
     color: "#000",
   },
   streak: {
+    fontSize: normalize(15),
     color: "grey",
   },
   theme: {
     position: "absolute",
-    right: 20,
-    top: 20,
+    right: "5%",
+    top: "5%",
   },
   button: {
     backgroundColor: "transparent",
