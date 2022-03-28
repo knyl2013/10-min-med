@@ -1,3 +1,7 @@
+# Expo cache
+.expo-shared/*
+.expo/*
+
 # Logs
 logs
 *.log
