@@ -9,10 +9,11 @@ import {
   View,
   Platform,
 } from "react-native";
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { Switch } from "react-native-switch";
+import * as Notifications from "expo-notifications";
 // import BackgroundTimer from "react-native-background-timer";
 
 export function normalize(size) {
@@ -31,7 +32,7 @@ const getToday = () => {
 };
 export default function App() {
   const start = 60 * 10;
-  // const start = 5;
+  // const start = 10;
   const [seconds, setSeconds] = useState(start);
   const [pause, setPause] = useState(!true);
   const [day, setDay] = useState(0);
@@ -39,6 +40,7 @@ export default function App() {
   const [isDarkMode, setIsDarkMode] = useState();
   const [finishFirstRead, setFinishFirstRead] = useState(false);
   const STORAGE_KEY = "@storage_key";
+  const d0 = useRef(-1);
   const convert = (seconds) => {
     let min = Math.floor(seconds / 60);
     let sec = seconds % 60;
@@ -105,6 +107,17 @@ export default function App() {
     // return () => BackgroundTimer.clearInterval(intervalId);
     const interval = setInterval(() => {
       if (!pause) {
+        const firstRun = d0.current == -1;
+        const now = Math.floor(new Date().getTime() / 1000);
+        const diff = now - d0.current;
+        d0.current = now;
+        if (!firstRun && diff > 2) {
+          console.log(
+            "Detected time elapsed from background, adjust seconds by " + diff
+          );
+          setSeconds(Math.max(0, seconds - diff));
+          return;
+        }
         if (seconds == 0) {
           setPause(true);
           Vibration.vibrate([500], true);
@@ -138,9 +151,13 @@ export default function App() {
             if (seconds == 0) {
               Vibration.cancel();
               setSeconds(start);
+              d0.current = -1;
               setPause((pause) => true);
             } else {
-              if (!pause) setSeconds(start);
+              if (!pause) {
+                setSeconds(start);
+                d0.current = -1;
+              }
               setPause((pause) => !pause);
             }
           }}
