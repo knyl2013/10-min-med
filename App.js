@@ -165,10 +165,10 @@ export default function App() {
             trigger: { seconds: start },
           });
         }
-        // Times up but still in foreground, cancel the notification
-        if (seconds == 1) {
-          Notifications.cancelAllScheduledNotificationsAsync();
-        }
+        // // Times up but still in foreground, cancel the notification
+        // if (seconds == 1) {
+        //   Notifications.cancelAllScheduledNotificationsAsync();
+        // }
       }
     }, 1000);
     return () => clearInterval(interval);
