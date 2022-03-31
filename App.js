@@ -14,7 +14,15 @@ import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { Switch } from "react-native-switch";
 import * as Notifications from "expo-notifications";
-// import BackgroundTimer from "react-native-background-timer";
+import * as Permissions from "expo-permissions";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 export function normalize(size) {
   return Platform.OS == "android" ? size / 2 : size;
@@ -30,9 +38,15 @@ const getToday = () => {
   d.setHours(0, 0, 0, 0);
   return d;
 };
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 export default function App() {
   const start = 60 * 10;
-  // const start = 10;
   const [seconds, setSeconds] = useState(start);
   const [pause, setPause] = useState(!true);
   const [day, setDay] = useState(0);
@@ -86,9 +100,21 @@ export default function App() {
       console.log("Failed to save the data to the storage");
     }
   };
+  const askPermissions = async () => {
+    const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    if (status != "granted") {
+      const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      if (status == "granted") {
+        console.log("Notification permission granted.");
+      }
+    } else {
+      console.log("Already have permission");
+    }
+  };
   useEffect(() => {
     readData();
     activateKeepAwake();
+    askPermissions();
   }, []);
   useEffect(() => checkStreak(), [finishFirstRead, seconds]);
   useEffect(() => {
@@ -127,6 +153,21 @@ export default function App() {
           }
         } else {
           setSeconds(seconds - 1);
+        }
+        console.log(seconds, start);
+        if (seconds == start) {
+          console.log("scheduling notifications...");
+          Notifications.scheduleNotificationAsync({
+            content: {
+              title: "10-min-med",
+              body: "Finished. Well Done!",
+            },
+            trigger: { seconds: start },
+          });
+        }
+        // Times up but still in foreground, cancel the notification
+        if (seconds == 1) {
+          Notifications.cancelAllScheduledNotificationsAsync();
         }
       }
     }, 1000);
