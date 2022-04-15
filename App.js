@@ -53,6 +53,9 @@ export default function App() {
   const [lastDone, setLastDone] = useState("");
   const [isDarkMode, setIsDarkMode] = useState();
   const [finishFirstRead, setFinishFirstRead] = useState(false);
+  const [guideText, setGuideText] = useState(
+    "Focus on your breathing, and nothing else"
+  );
   const STORAGE_KEY = "@storage_key";
   const d0 = useRef(-1);
   const convert = (seconds) => {
@@ -156,6 +159,8 @@ export default function App() {
         }
         console.log(seconds, start);
         if (seconds == start) {
+          // cancel previous notifications before adding a new one
+          Notifications.cancelAllScheduledNotificationsAsync();
           console.log("scheduling notifications...");
           Notifications.scheduleNotificationAsync({
             content: {
@@ -165,12 +170,12 @@ export default function App() {
             trigger: { seconds: start },
           });
         }
-        // // Times up but still in foreground, cancel the notification
-        // if (seconds == 1) {
-        //   Notifications.cancelAllScheduledNotificationsAsync();
-        // }
       }
     }, 1000);
+    // // Times up but still in foreground, cancel the notification
+    if (seconds == 1) {
+      Notifications.cancelAllScheduledNotificationsAsync();
+    }
     return () => clearInterval(interval);
   }, [seconds, pause]);
   const TimerText = () => {
@@ -203,20 +208,6 @@ export default function App() {
             }
           }}
         />
-        {/* {seconds != start && (
-        <Button
-          title="Reset"
-          onPress={() => {
-            setSeconds(start);
-            setPause(true);
-            Vibration.cancel();
-          }}
-        />
-      )} */}
-        {/* <Button
-        title="Delete History"
-        onPress={() => AsyncStorage.setItem(STORAGE_KEY, "")}
-      /> */}
       </React.Fragment>
     );
   };
@@ -235,13 +226,8 @@ export default function App() {
             backgroundInactive={"#eee"}
           />
         </View>
-
-        // <SwitchWithIcons
-        //   onValueChange={(value) =>
-        //     console.log(`Value has been updated to ${value}`)
-        //   }
-        // />
       )}
+      {!pause && <Text style={styles.guide}>{guideText}</Text>}
       <AnimatedCircularProgress
         size={300}
         width={15}
@@ -287,5 +273,16 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "transparent",
+  },
+  guide: {
+    position: "absolute",
+    fontSize: normalize(15),
+    color: "grey",
+    right: "0%",
+    left: "0%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    textAlign: "center",
+    top: "20%",
   },
 });
