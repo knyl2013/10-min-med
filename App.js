@@ -202,6 +202,7 @@ export default function App() {
             } else {
               if (!pause) {
                 setSeconds(start);
+                Notifications.cancelAllScheduledNotificationsAsync();
                 d0.current = -1;
               }
               setPause((pause) => !pause);
