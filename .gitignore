@@ -1,3 +1,6 @@
+# Secrets
+constants/Environment.js
+
 # Expo cache
 .expo-shared/*
 .expo/*
