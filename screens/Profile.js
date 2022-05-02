@@ -7,8 +7,14 @@ import { PersonContext } from "../App";
 import * as env from "../constants/Environment";
 
 export default function ProfileScreen() {
-  const { isLoggedIn, setIsLoggedIn, isDarkMode, setIsDarkMode } =
-    useContext(PersonContext);
+  const {
+    isDarkMode,
+    setIsDarkMode,
+    token,
+    setToken,
+    setLoggedEmail,
+    loggedEmail,
+  } = useContext(PersonContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,21 +32,56 @@ export default function ProfileScreen() {
       },
       body: JSON.stringify({ email: email, password: password }),
     };
-    const response = await fetch(env.BASE_URL, requestOptions);
+    const response = await fetch(env.BASE_URL + "/login", requestOptions);
     const data = await response.json();
     if (data.token) {
-      setMessage("Login Successful");
+      // setMessage("Login Successful");
+      setMessage("");
+      setToken(data.token);
+      setLoggedEmail(data.user.email);
+      setPassword("");
     } else {
       setMessage("Failed: " + data.message);
     }
     console.log(data);
-    // this.setState({ postId: data.id });
+    setIsLoading(false);
+  };
+  const handleRegister = async () => {
+    setIsLoading(true);
+    // POST request using fetch with async/await
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": env.API_KEY,
+      },
+      body: JSON.stringify({ email: email, password: password }),
+    };
+    const response = await fetch(env.BASE_URL + "/register", requestOptions);
+    const data = await response.json();
+    if (data.email) {
+      setMessage("Register Successful");
+    } else {
+      setMessage("Failed: " + data.message);
+    }
+    console.log(data);
     setIsLoading(false);
   };
   return (
     <View style={{ flex: 1, alignItems: "center", top: "20%" }}>
-      {isLoggedIn && <Text value="Hi user"></Text>}
-      {!isLoggedIn && (
+      {!!loggedEmail && !!token && (
+        <>
+          <Text>Hi {loggedEmail}</Text>
+          <Button
+            title="Logout"
+            onPress={() => {
+              setLoggedEmail("");
+              setToken("");
+            }}
+          />
+        </>
+      )}
+      {!loggedEmail && (
         <>
           <Switch
             onValueChange={(prevIsDarkMode) => {
@@ -59,7 +100,7 @@ export default function ProfileScreen() {
               style={styles.input}
               onChangeText={onChangeEmail}
               placeholder="email"
-              keyboardType="text"
+              keyboardType="email-address"
               value={email}
               editable={!isLoading}
             />
@@ -71,6 +112,7 @@ export default function ProfileScreen() {
               onChangeText={onChangePassword}
               placeholder="password"
               secureTextEntry={true}
+              keyboardType="default"
               value={password}
               editable={!isLoading}
             />
@@ -79,6 +121,11 @@ export default function ProfileScreen() {
           <Button
             title="Login"
             onPress={handleLogin}
+            disabled={isLoading}
+          ></Button>
+          <Button
+            title="Register"
+            onPress={handleRegister}
             disabled={isLoading}
           ></Button>
           <Text>{message}</Text>

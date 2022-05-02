@@ -57,6 +57,7 @@ export default function MeditationScreen() {
     setIsDarkMode,
     day,
     setDay,
+    loggedEmail,
   } = useContext(PersonContext);
   const [json, setJson] = useAsyncStorage(STORAGE_KEY, "");
   const start = 60 * 10;
@@ -264,6 +265,7 @@ export default function MeditationScreen() {
       >
         {() => <TimerText />}
       </AnimatedCircularProgress>
+      <Text>Hi {loggedEmail}</Text>
     </View>
   );
 }

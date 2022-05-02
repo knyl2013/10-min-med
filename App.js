@@ -22,6 +22,8 @@ export default function App() {
   const [day, setDay] = useAsyncStorage("@DAY", 0);
   const [lastDone, setLastDone] = useAsyncStorage("@LAST_DONE", "");
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [loggedEmail, setLoggedEmail] = useState("");
+  const [token, setToken] = useState("");
   const states = {
     isDarkMode,
     setIsDarkMode,
@@ -46,6 +48,10 @@ export default function App() {
         setLastDone,
         isDarkMode,
         setIsDarkMode,
+        token,
+        setToken,
+        loggedEmail,
+        setLoggedEmail,
       }}
     >
       <NavigationContainer theme={isDarkMode ? DarkTheme : LightTheme}>
