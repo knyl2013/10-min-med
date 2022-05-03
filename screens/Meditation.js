@@ -58,9 +58,12 @@ export default function MeditationScreen() {
     day,
     setDay,
     loggedEmail,
+    days,
+    setDays,
   } = useContext(PersonContext);
   const [json, setJson] = useAsyncStorage(STORAGE_KEY, "");
   const start = 60 * 10;
+  // const start = 5;
   const [seconds, setSeconds] = useState(start);
   const [pause, setPause] = useState(!true);
   const [finishFirstRead, setFinishFirstRead] = useState(false);
@@ -172,6 +175,18 @@ export default function MeditationScreen() {
             setDay(day + 1);
             setLastDone(getToday().toString());
           }
+          setDays((prevDays) => {
+            try {
+              arr = JSON.parse(prevDays);
+            } catch (e) {
+              arr = [];
+            }
+            const today = getToday().toString();
+            if (arr.indexOf(today) == -1) {
+              arr.push(getToday().toString());
+            }
+            return JSON.stringify(arr);
+          });
         } else {
           setSeconds(seconds - 1);
         }
