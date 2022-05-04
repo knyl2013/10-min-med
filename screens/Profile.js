@@ -14,6 +14,8 @@ export default function ProfileScreen() {
     setToken,
     setLoggedEmail,
     loggedEmail,
+    isLightMode,
+    setIsLightMode,
   } = useContext(PersonContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -84,12 +86,14 @@ export default function ProfileScreen() {
       {!loggedEmail && (
         <>
           <Switch
-            onValueChange={(prevIsDarkMode) => {
-              setIsDarkMode(!isDarkMode);
+            onValueChange={() => {
+              setIsLightMode((prevIsLightMode) => {
+                return JSON.stringify(!JSON.parse(prevIsLightMode));
+              });
             }}
-            value={isDarkMode}
-            inActiveText={"🌙"}
-            activeText={"☀️"}
+            value={isLightMode && JSON.parse(isLightMode)}
+            activeText={"🌙"}
+            inActiveText={"☀️"}
             switchLeftPx={4}
             switchRightPx={4}
             backgroundActive={"#333"}

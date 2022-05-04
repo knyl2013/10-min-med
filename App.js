@@ -18,13 +18,17 @@ export const PersonContext = React.createContext();
 export default function App() {
   const Drawer = createDrawerNavigator();
   const STORAGE_KEY = "@storage_key";
-  const [isDarkMode, setIsDarkMode] = useAsyncStorage("@IS_DARK_MODE", false);
+  const [isDarkMode, setIsDarkMode] = useAsyncStorage("@IS_DARK_MODE", "false");
   const [day, setDay] = useAsyncStorage("@DAY", 0);
   const [days, setDays] = useAsyncStorage("@DAYS", "[]");
   const [lastDone, setLastDone] = useAsyncStorage("@LAST_DONE", "");
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [loggedEmail, setLoggedEmail] = useState("");
   const [token, setToken] = useState("");
+  const [isLightMode, setIsLightMode] = useAsyncStorage(
+    "@IS_LIGHT_MODE",
+    "false"
+  );
   const states = {
     isDarkMode,
     setIsDarkMode,
@@ -55,6 +59,8 @@ export default function App() {
         setLoggedEmail,
         days,
         setDays,
+        isLightMode,
+        setIsLightMode,
       }}
     >
       <NavigationContainer theme={isDarkMode ? DarkTheme : LightTheme}>

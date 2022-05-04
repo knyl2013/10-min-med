@@ -60,6 +60,8 @@ export default function MeditationScreen() {
     loggedEmail,
     days,
     setDays,
+    isLightMode,
+    setIsLightMode,
   } = useContext(PersonContext);
   const [json, setJson] = useAsyncStorage(STORAGE_KEY, "");
   const start = 60 * 10;
@@ -214,7 +216,13 @@ export default function MeditationScreen() {
   const TimerText = () => {
     return (
       <React.Fragment>
-        <Text style={isDarkMode ? styles.darkTime : styles.lightTime}>
+        <Text
+          style={
+            isLightMode && JSON.parse(isLightMode)
+              ? styles.lightTime
+              : styles.darkTime
+          }
+        >
           {convert(seconds)}
         </Text>
         <Text style={styles.streak}>
@@ -247,36 +255,40 @@ export default function MeditationScreen() {
     );
   };
   return (
-    <View style={isDarkMode ? styles.darkContainer : styles.lightContainer}>
-      {pause && (
+    <View
+      style={
+        isLightMode && JSON.parse(isLightMode)
+          ? styles.lightContainer
+          : styles.darkContainer
+      }
+    >
+      {/* {pause && (
         <View style={styles.theme}>
           <Switch
-            onValueChange={(prevIsDarkMode) => {
-              setIsDarkMode((isDarkMode) => {
-                console.log("de: ", isDarkMode);
-                return "de";
+            onValueChange={() => {
+              setIsLightMode((prevIsLightMode) => {
+                return JSON.stringify(!JSON.parse(prevIsLightMode));
               });
-              setJson({ ...json, isDarkMode: !prevIsDarkMode });
-              console.log({ ...json, isDarkMode: !prevIsDarkMode });
-              console.log(json);
             }}
-            value={isDarkMode}
-            inActiveText={"🌙"}
-            activeText={"☀️"}
+            value={isLightMode && JSON.parse(isLightMode)}
+            activeText={"🌙"}
+            inActiveText={"☀️"}
             switchLeftPx={4}
             switchRightPx={4}
             backgroundActive={"#333"}
             backgroundInactive={"#eee"}
           />
         </View>
-      )}
+      )} */}
       {!pause && <Text style={styles.guide}>{guideText}</Text>}
       <AnimatedCircularProgress
         size={300}
         width={15}
         fill={((start - seconds) / start) * 100}
         tintColor="#f9013f"
-        backgroundColor={isDarkMode ? "#333" : "#eee"}
+        backgroundColor={
+          isLightMode && JSON.parse(isLightMode) ? "#eee" : "#333"
+        }
       >
         {() => <TimerText />}
       </AnimatedCircularProgress>
