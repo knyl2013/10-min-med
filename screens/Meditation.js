@@ -47,7 +47,7 @@ Notifications.setNotificationHandler({
     shouldSetBadge: true,
   }),
 });
-export default function MeditationScreen() {
+export default function MeditationScreen({ navigation }) {
   const {
     isLoggedIn,
     setIsLoggedIn,
@@ -326,6 +326,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: "5%",
     top: "5%",
+  },
+  profileButton: {
+    backgroundColor: "transparent",
   },
   button: {
     backgroundColor: "transparent",

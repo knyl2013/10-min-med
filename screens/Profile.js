@@ -6,7 +6,7 @@ import { GlobalContext } from "../context/Provider";
 import { PersonContext } from "../App";
 import * as env from "../constants/Environment";
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }) {
   const {
     isDarkMode,
     setIsDarkMode,
@@ -101,7 +101,11 @@ export default function ProfileScreen() {
           />
           <View style={{ flexDirection: "row" }}>
             <TextInput
-              style={styles.input}
+              style={
+                isLightMode && JSON.parse(isLightMode)
+                  ? styles.lightInput
+                  : styles.darkInput
+              }
               onChangeText={onChangeEmail}
               placeholder="email"
               keyboardType="email-address"
@@ -112,7 +116,11 @@ export default function ProfileScreen() {
           </View>
           <View style={{ flexDirection: "row" }}>
             <TextInput
-              style={styles.input}
+              style={
+                isLightMode && JSON.parse(isLightMode)
+                  ? styles.lightInput
+                  : styles.darkInput
+              }
               onChangeText={onChangePassword}
               placeholder="password"
               secureTextEntry={true}
@@ -123,11 +131,13 @@ export default function ProfileScreen() {
             <TextInput />
           </View>
           <Button
+            color="#f9013f"
             title="Login"
             onPress={handleLogin}
             disabled={isLoading}
           ></Button>
           <Button
+            color="#f9013f"
             title="Register"
             onPress={handleRegister}
             disabled={isLoading}
@@ -139,11 +149,19 @@ export default function ProfileScreen() {
   );
 }
 const styles = StyleSheet.create({
-  input: {
+  lightInput: {
     height: 40,
     width: "70%",
     margin: 12,
     borderWidth: 1,
     padding: 10,
+  },
+  darkInput: {
+    height: 40,
+    width: "70%",
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    backgroundColor: "#fff",
   },
 });

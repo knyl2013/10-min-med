@@ -63,7 +63,9 @@ export default function App() {
         setIsLightMode,
       }}
     >
-      <NavigationContainer theme={isDarkMode ? DarkTheme : LightTheme}>
+      <NavigationContainer
+        theme={isLightMode && JSON.parse(isLightMode) ? LightTheme : DarkTheme}
+      >
         <Drawer.Navigator>
           <Drawer.Screen
             name="Home"
