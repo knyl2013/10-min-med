@@ -29,6 +29,11 @@ Notifications.setNotificationHandler({
 export function normalize(size) {
   return Platform.OS == "android" ? size / 2 : size;
 }
+const getYesterdayOf = (d) => {
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - 1);
+  return d;
+};
 const getYesterday = () => {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
@@ -65,7 +70,6 @@ export default function MeditationScreen({ navigation }) {
   } = useContext(PersonContext);
   const [json, setJson] = useAsyncStorage(STORAGE_KEY, "");
   const start = 60 * 10;
-  // const start = 5;
   const [seconds, setSeconds] = useState(start);
   const [pause, setPause] = useState(!true);
   const [finishFirstRead, setFinishFirstRead] = useState(false);
@@ -207,12 +211,44 @@ export default function MeditationScreen({ navigation }) {
         }
       }
     }, 1000);
-    // // Times up but still in foreground, cancel the notification
+    // Times up but still in foreground, cancel the notification
     if (seconds == 1) {
       Notifications.cancelAllScheduledNotificationsAsync();
     }
     return () => clearInterval(interval);
   }, [seconds, pause]);
+  const getConsecutiveDays = (days) => {
+    if (!days || !days.length) return 0;
+    const daysObj = JSON.parse(days);
+    if (!daysObj || !daysObj.length) return false;
+    let ans = isTodayDone(days) ? 1 : 0;
+    let target = getYesterday();
+    let n = daysObj.length;
+    while (n--) {
+      let targetStr = target.toString();
+      let found = false;
+      for (const day of daysObj) {
+        if (day == targetStr) {
+          ans++;
+          found = true;
+          target = getYesterdayOf(target);
+          break;
+        }
+      }
+      if (!found) break;
+    }
+    return ans;
+  };
+  const isTodayDone = (days) => {
+    if (!days || !days.length) return false;
+    const daysObj = JSON.parse(days);
+    if (!daysObj || !daysObj.length) return false;
+    const todayStr = getToday().toString();
+    for (const day of daysObj) {
+      if (day == todayStr) return true;
+    }
+    return false;
+  };
   const TimerText = () => {
     return (
       <React.Fragment>
@@ -226,8 +262,9 @@ export default function MeditationScreen({ navigation }) {
           {convert(seconds)}
         </Text>
         <Text style={styles.streak}>
-          Streak: {day} Day{day > 1 ? "s" : ""} (
-          {lastDone == getToday().toString() ? "" : "Not "}Done Today)
+          Streak: {getConsecutiveDays(days)} Day
+          {getConsecutiveDays(days) > 1 ? "s" : ""} (
+          {isTodayDone(days) ? "" : "Not "}Done Today)
         </Text>
         <StatusBar style="auto" />
         <Button
@@ -292,7 +329,6 @@ export default function MeditationScreen({ navigation }) {
       >
         {() => <TimerText />}
       </AnimatedCircularProgress>
-      <Text>Hi {loggedEmail}</Text>
     </View>
   );
 }
