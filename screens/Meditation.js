@@ -11,8 +11,8 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
+import * as DateUtil from "../util/DateUtil";
 import { PersonContext } from "../App";
-
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -20,26 +20,9 @@ Notifications.setNotificationHandler({
     shouldSetBadge: true,
   }),
 });
-
 export function normalize(size) {
   return Platform.OS == "android" ? size / 2 : size;
 }
-const getYesterdayOf = (d) => {
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() - 1);
-  return d;
-};
-const getYesterday = () => {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() - 1);
-  return d;
-};
-const getToday = () => {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d;
-};
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -108,9 +91,9 @@ export default function MeditationScreen() {
             } catch (e) {
               arr = [];
             }
-            const today = getToday().toString();
+            const today = DateUtil.getToday().toString();
             if (arr.indexOf(today) == -1) {
-              arr.push(getToday().toString());
+              arr.push(DateUtil.getToday().toString());
             }
             return JSON.stringify(arr);
           });
@@ -138,35 +121,7 @@ export default function MeditationScreen() {
     }
     return () => clearInterval(interval);
   }, [seconds, pause]);
-  const getConsecutiveDays = (days) => {
-    if (!days || !days.length) return 0;
-    const daysObj = JSON.parse(days);
-    if (!daysObj || !daysObj.length) return false;
-    const n = daysObj.length;
-    let ans = isTodayDone(days) ? 1 : 0;
-    let target = getYesterday();
-    var set = new Set();
-    for (const day of daysObj) {
-      set.add(day);
-    }
-    for (let i = 0; i < n; i++) {
-      if (set.has(target.toString())) {
-        ans++;
-        target = getYesterdayOf(target);
-      } else break;
-    }
-    return ans;
-  };
-  const isTodayDone = (days) => {
-    if (!days || !days.length) return false;
-    const daysObj = JSON.parse(days);
-    if (!daysObj || !daysObj.length) return false;
-    const todayStr = getToday().toString();
-    for (const day of daysObj) {
-      if (day == todayStr) return true;
-    }
-    return false;
-  };
+
   const TimerText = () => {
     return (
       <React.Fragment>
@@ -180,9 +135,9 @@ export default function MeditationScreen() {
           {convert(seconds)}
         </Text>
         <Text style={styles.streak}>
-          Streak: {getConsecutiveDays(days)} Day
-          {getConsecutiveDays(days) > 1 ? "s" : ""} (
-          {isTodayDone(days) ? "" : "Not "}Done Today)
+          Streak: {DateUtil.getConsecutiveDays(days)} Day
+          {DateUtil.getConsecutiveDays(days) > 1 ? "s" : ""} (
+          {DateUtil.isTodayDone(days) ? "" : "Not "}Done Today)
         </Text>
         <StatusBar style="auto" />
         <Button
