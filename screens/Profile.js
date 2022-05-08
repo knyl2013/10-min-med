@@ -2,7 +2,7 @@ import { View, Text, TextInput, StyleSheet, Button, Image } from "react-native";
 import { Switch } from "react-native-switch";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { PersonContext } from "../App";
-import * as env from "../constants/Environment";
+import * as AuthUtil from "../util/AuthUtil";
 
 export default function ProfileScreen({ navigation }) {
   const {
@@ -21,17 +21,7 @@ export default function ProfileScreen({ navigation }) {
   const onChangePassword = (newPassword) => setPassword(newPassword);
   const handleLogin = async () => {
     setIsLoading(true);
-    // POST request using fetch with async/await
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": env.API_KEY,
-      },
-      body: JSON.stringify({ email: email, password: password }),
-    };
-    const response = await fetch(env.BASE_URL + "/login", requestOptions);
-    const data = await response.json();
+    const data = await AuthUtil.login(email, password);
     if (data.token) {
       // setMessage("Login Successful");
       setMessage("");
@@ -46,17 +36,7 @@ export default function ProfileScreen({ navigation }) {
   };
   const handleRegister = async () => {
     setIsLoading(true);
-    // POST request using fetch with async/await
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": env.API_KEY,
-      },
-      body: JSON.stringify({ email: email, password: password }),
-    };
-    const response = await fetch(env.BASE_URL + "/register", requestOptions);
-    const data = await response.json();
+    const data = await AuthUtil.register(email, password);
     if (data.email) {
       setMessage("Register Successful");
     } else {
