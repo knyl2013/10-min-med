@@ -31,15 +31,8 @@ Notifications.setNotificationHandler({
   }),
 });
 export default function MeditationScreen() {
-  const {
-    isLoggedIn,
-    setIsLoggedIn,
-    loggedEmail,
-    days,
-    setDays,
-    isLightMode,
-    setIsLightMode,
-  } = useContext(PersonContext);
+  const { loggedEmail, days, setDays, isLightMode, setIsLightMode } =
+    useContext(PersonContext);
   const start = 60 * 10;
   const [seconds, setSeconds] = useState(start);
   const [pause, setPause] = useState(!true);
@@ -145,7 +138,6 @@ export default function MeditationScreen() {
           title={pause && seconds != 0 ? "Start" : "Reset"}
           style={styles.button}
           onPress={() => {
-            setIsLoggedIn((prev) => !prev); // just for checking
             if (seconds == 0) {
               Vibration.cancel();
               setSeconds(start);

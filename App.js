@@ -11,15 +11,13 @@ import {
 import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 import { useEffect } from "react";
 import { useAsyncStorage } from "./util/useAsyncStorage";
-import GlobalProvider from "./context/Provider";
 
 export const PersonContext = React.createContext();
 export default function App() {
   const Drawer = createDrawerNavigator();
   const [days, setDays] = useAsyncStorage("@DAYS", "[]");
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [loggedEmail, setLoggedEmail] = useState("");
-  const [token, setToken] = useState("");
+  const [loggedEmail, setLoggedEmail] = useAsyncStorage("@LOGGED_EMAIL", "");
+  const [token, setToken] = useAsyncStorage("@TOKEN", "");
   const [isLightMode, setIsLightMode] = useAsyncStorage(
     "@IS_LIGHT_MODE",
     "false"
@@ -30,8 +28,6 @@ export default function App() {
   return (
     <PersonContext.Provider
       value={{
-        isLoggedIn,
-        setIsLoggedIn,
         token,
         setToken,
         loggedEmail,

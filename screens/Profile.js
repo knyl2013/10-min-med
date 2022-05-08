@@ -71,11 +71,34 @@ export default function ProfileScreen({ navigation }) {
   };
   return (
     <View style={{ flex: 1, alignItems: "center", top: "20%" }}>
+      <Switch
+        onValueChange={() => {
+          setIsLightMode((prevIsLightMode) => {
+            return JSON.stringify(!JSON.parse(prevIsLightMode));
+          });
+        }}
+        value={isLightMode && JSON.parse(isLightMode)}
+        activeText={"🌙"}
+        inActiveText={"☀️"}
+        switchLeftPx={4}
+        switchRightPx={4}
+        backgroundActive={"#333"}
+        backgroundInactive={"#eee"}
+      />
       {!!loggedEmail && !!token && (
         <>
-          <Text>Hi {loggedEmail}</Text>
+          <Text
+            style={
+              isLightMode && JSON.parse(isLightMode)
+                ? styles.lightText
+                : styles.darkText
+            }
+          >
+            Hi {loggedEmail}
+          </Text>
           <Button
             title="Logout"
+            color="#f9013f"
             onPress={() => {
               setLoggedEmail("");
               setToken("");
@@ -83,22 +106,9 @@ export default function ProfileScreen({ navigation }) {
           />
         </>
       )}
+
       {!loggedEmail && (
         <>
-          <Switch
-            onValueChange={() => {
-              setIsLightMode((prevIsLightMode) => {
-                return JSON.stringify(!JSON.parse(prevIsLightMode));
-              });
-            }}
-            value={isLightMode && JSON.parse(isLightMode)}
-            activeText={"🌙"}
-            inActiveText={"☀️"}
-            switchLeftPx={4}
-            switchRightPx={4}
-            backgroundActive={"#333"}
-            backgroundInactive={"#eee"}
-          />
           <View style={{ flexDirection: "row" }}>
             <TextInput
               style={
@@ -163,5 +173,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     backgroundColor: "#fff",
+  },
+  lightText: {
+    color: "#000",
+  },
+  darkText: {
+    color: "#fff",
   },
 });
