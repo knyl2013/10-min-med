@@ -1,15 +1,11 @@
 import { View, Text, TextInput, StyleSheet, Button, Image } from "react-native";
 import { Switch } from "react-native-switch";
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { useAsyncStorage } from "../util/useAsyncStorage";
-import { GlobalContext } from "../context/Provider";
 import { PersonContext } from "../App";
 import * as env from "../constants/Environment";
 
 export default function ProfileScreen({ navigation }) {
   const {
-    isDarkMode,
-    setIsDarkMode,
     token,
     setToken,
     setLoggedEmail,

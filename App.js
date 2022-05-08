@@ -8,7 +8,7 @@ import {
   DarkTheme,
   LightTheme,
 } from "@react-navigation/native";
-import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
+import { activateKeepAwake } from "expo-keep-awake";
 import { useEffect } from "react";
 import { useAsyncStorage } from "./util/useAsyncStorage";
 
