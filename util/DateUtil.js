@@ -17,7 +17,7 @@ export const getToday = () => {
 export const getConsecutiveDays = (days) => {
   if (!days || !days.length) return 0;
   const daysObj = JSON.parse(days);
-  if (!daysObj || !daysObj.length) return false;
+  if (!daysObj || !daysObj.length) return 0;
   const n = daysObj.length;
   let ans = isTodayDone(days) ? 1 : 0;
   let target = getYesterday();

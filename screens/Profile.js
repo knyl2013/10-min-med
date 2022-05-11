@@ -3,8 +3,9 @@ import { Switch } from "react-native-switch";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { PersonContext } from "../App";
 import * as AuthUtil from "../util/AuthUtil";
+import { setBadgeCountAsync } from "expo-notifications";
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen() {
   const {
     token,
     setToken,
@@ -12,6 +13,8 @@ export default function ProfileScreen({ navigation }) {
     loggedEmail,
     isLightMode,
     setIsLightMode,
+    days,
+    setDays,
   } = useContext(PersonContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -70,7 +73,7 @@ export default function ProfileScreen({ navigation }) {
                 : styles.darkText
             }
           >
-            Hi {loggedEmail}
+            User: {loggedEmail}, Completed Days: {days}
           </Text>
           <Button
             title="Logout"
