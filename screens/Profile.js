@@ -101,7 +101,6 @@ export default function ProfileScreen() {
               value={email}
               editable={!isLoading}
             />
-            <TextInput />
           </View>
           <View style={{ flexDirection: "row" }}>
             <TextInput
@@ -117,7 +116,6 @@ export default function ProfileScreen() {
               value={password}
               editable={!isLoading}
             />
-            <TextInput />
           </View>
           <Button
             color="#f9013f"
