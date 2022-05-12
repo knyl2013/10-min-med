@@ -80,6 +80,7 @@ export default function MeditationScreen() {
           setPause(true);
           Vibration.vibrate([500], true);
           setDays((prevDays) => {
+            let arr = [];
             try {
               arr = JSON.parse(prevDays);
             } catch (e) {
