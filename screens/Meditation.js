@@ -61,6 +61,7 @@ export default function MeditationScreen() {
   }, []);
 
   useEffect(() => {
+    // return;
     // Start a timer that runs continuous after X milliseconds
     const interval = setInterval(() => {
       if (!pause) {
@@ -94,7 +95,7 @@ export default function MeditationScreen() {
           setSeconds(seconds - 1);
         }
         console.log(seconds, start);
-        if (seconds == start) {
+        if (seconds == start && Platform.OS === "ios") {
           // cancel previous notifications before adding a new one
           Notifications.cancelAllScheduledNotificationsAsync();
           console.log("scheduling notifications...");
@@ -109,7 +110,7 @@ export default function MeditationScreen() {
       }
     }, 1000);
     // Times up but still in foreground, cancel the notification
-    if (seconds == 1) {
+    if (seconds == 1 && Platform.OS === "ios") {
       Notifications.cancelAllScheduledNotificationsAsync();
     }
     return () => clearInterval(interval);
@@ -146,7 +147,9 @@ export default function MeditationScreen() {
             } else {
               if (!pause) {
                 setSeconds(start);
-                Notifications.cancelAllScheduledNotificationsAsync();
+                if (Platform.OS === "ios") {
+                  Notifications.cancelAllScheduledNotificationsAsync();
+                }
                 d0.current = -1;
               }
               setPause((pause) => !pause);
