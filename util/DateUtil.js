@@ -26,7 +26,7 @@ export const getConsecutiveDays = (days) => {
     set.add(day);
   }
   for (let i = 0; i < n; i++) {
-    if (set.has(target.toString())) {
+    if (set.has(getDateStr(target))) {
       ans++;
       target = getYesterdayOf(target);
     } else break;
@@ -37,9 +37,13 @@ export const isTodayDone = (days) => {
   if (!days || !days.length) return false;
   const daysObj = JSON.parse(days);
   if (!daysObj || !daysObj.length) return false;
-  const todayStr = getToday().toString();
+  const todayStr = getDateStr(getToday());
   for (const day of daysObj) {
     if (day == todayStr) return true;
   }
   return false;
+};
+
+export const getDateStr = (d) => {
+  return d.toISOString().split("T")[0];
 };

@@ -86,9 +86,9 @@ export default function MeditationScreen() {
             } catch (e) {
               arr = [];
             }
-            const today = DateUtil.getToday().toString();
-            if (arr.indexOf(today) == -1) {
-              arr.push(DateUtil.getToday().toString());
+            const todayStr = DateUtil.getDateStr(DateUtil.getToday());
+            if (arr.indexOf(todayStr) == -1) {
+              arr.push(todayStr);
             }
             return JSON.stringify(arr);
           });

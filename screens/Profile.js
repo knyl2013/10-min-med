@@ -2,7 +2,7 @@ import { View, Text, TextInput, StyleSheet, Button, Image } from "react-native";
 import { Switch } from "react-native-switch";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { PersonContext } from "../App";
-import * as AuthUtil from "../util/AuthUtil";
+import * as AWSUtil from "../util/AWSUtil";
 import { setBadgeCountAsync } from "expo-notifications";
 
 export default function ProfileScreen() {
@@ -24,7 +24,7 @@ export default function ProfileScreen() {
   const onChangePassword = (newPassword) => setPassword(newPassword);
   const handleLogin = async () => {
     setIsLoading(true);
-    const data = await AuthUtil.login(email, password);
+    const data = await AWSUtil.login(email, password);
     if (data.token) {
       // setMessage("Login Successful");
       setMessage("");
@@ -39,7 +39,7 @@ export default function ProfileScreen() {
   };
   const handleRegister = async () => {
     setIsLoading(true);
-    const data = await AuthUtil.register(email, password);
+    const data = await AWSUtil.register(email, password);
     if (data.email) {
       setMessage("Register Successful");
     } else {
@@ -47,6 +47,9 @@ export default function ProfileScreen() {
     }
     console.log(data);
     setIsLoading(false);
+  };
+  const handleClearHistory = () => {
+    setDays("[]");
   };
   return (
     <View style={{ flex: 1, alignItems: "center", top: "20%" }}>
@@ -73,7 +76,7 @@ export default function ProfileScreen() {
                 : styles.darkText
             }
           >
-            User: {loggedEmail}, Completed Days: {days}
+            User: {loggedEmail}
           </Text>
           <Button
             title="Logout"
@@ -129,9 +132,31 @@ export default function ProfileScreen() {
             onPress={handleRegister}
             disabled={isLoading}
           ></Button>
-          <Text>{message}</Text>
+          <Text
+            style={
+              isLightMode && JSON.parse(isLightMode)
+                ? styles.lightText
+                : styles.darkText
+            }
+          >
+            {message}
+          </Text>
         </>
       )}
+      <Text
+        style={
+          isLightMode && JSON.parse(isLightMode)
+            ? styles.lightText
+            : styles.darkText
+        }
+      >
+        Completed Days: {days}
+      </Text>
+      <Button
+        color="#f9013f"
+        title="Clear History"
+        onPress={handleClearHistory}
+      ></Button>
     </View>
   );
 }
