@@ -1,19 +1,27 @@
-const AWS = require('aws-sdk');
-const util = require('../util/util');
-const auth = require('../util/auth');
+const AWS = require("aws-sdk");
+const util = require("../util/util");
+const auth = require("../util/auth");
 AWS.config.update({
-  region: 'us-east-1'
+  region: "us-east-1",
 });
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-const userTable = 'User';
+const userTable = "User";
 
 async function sync(requestBody) {
-  if (!requestBody.user || !requestBody.token || !requestBody.user.completedDays) {
-    return util.buildResponse(401, { synced: false, message: 'Token / User / User.completedDays is empty' });
+  if (
+    !requestBody.user ||
+    !requestBody.token ||
+    !requestBody.user.completedDays ||
+    !JSON.parse(requestBody.user.completedDays)
+  ) {
+    return util.buildResponse(401, {
+      synced: false,
+      message: "Token / User / User.completedDays is empty",
+    });
   }
   const user = requestBody.user;
   const token = requestBody.token;
-  const completedDays = user.completedDays
+  const completedDays = JSON.parse(user.completedDays);
   const verification = auth.verifyToken(user.email, token);
   const merge = (a, b) => {
     const ans = [];
@@ -33,13 +41,13 @@ async function sync(requestBody) {
   saveUser(dynamoUser);
   const userInfo = {
     email: dynamoUser.email,
-    completedDays: dynamoUser.completedDays
+    completedDays: dynamoUser.completedDays,
   };
   return util.buildResponse(200, {
     synced: true,
-    message: 'success',
+    message: "success",
     user: userInfo,
-    token: token
+    token: token,
   });
 }
 
@@ -47,30 +55,34 @@ async function getUser(email) {
   const params = {
     TableName: userTable,
     Key: {
-      email: email
-    }
+      email: email,
+    },
   };
 
-  return await dynamodb.get(params).promise()
-    .then(response => {
+  return await dynamodb
+    .get(params)
+    .promise()
+    .then((response) => {
       return response.Item;
     })
-    .catch(err => {
-      console.log('There is an error getting user', err);
+    .catch((err) => {
+      console.log("There is an error getting user", err);
     });
 }
 
 async function saveUser(user) {
   const params = {
     TableName: userTable,
-    Item: user
+    Item: user,
   };
-  return await dynamodb.put(params).promise()
+  return await dynamodb
+    .put(params)
+    .promise()
     .then(() => {
-      return true
+      return true;
     })
-    .catch(err => {
-      console.log('There is an error saving user', err);
+    .catch((err) => {
+      console.log("There is an error saving user", err);
     });
 }
 
