@@ -61,7 +61,6 @@ export default function MeditationScreen() {
   }, []);
 
   useEffect(() => {
-    // return;
     // Start a timer that runs continuous after X milliseconds
     const interval = setInterval(() => {
       if (!pause) {
