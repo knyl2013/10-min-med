@@ -27,6 +27,7 @@ export const register = async (email, password) => {
 };
 
 export const sync = async (user, token) => {
+  console.log(user, token);
   // POST request using fetch with async/await
   const requestOptions = {
     method: "POST",

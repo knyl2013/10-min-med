@@ -43,7 +43,6 @@ export const isTodayDone = (days) => {
   }
   return false;
 };
-
 export const getDateStr = (d) => {
   return d.toISOString().split("T")[0];
 };

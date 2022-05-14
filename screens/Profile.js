@@ -51,6 +51,18 @@ export default function ProfileScreen() {
   const handleClearHistory = () => {
     setDays("[]");
   };
+  const handleSync = async () => {
+    setIsLoading(true);
+    const data = await AWSUtil.sync(
+      { email: loggedEmail, completedDays: days },
+      token
+    );
+    if (!data.synced) {
+      setMessage("Sync Failed: " + data.message);
+    }
+    console.log(data);
+    setIsLoading(false);
+  };
   return (
     <View style={{ flex: 1, alignItems: "center", top: "20%" }}>
       <Switch
@@ -78,14 +90,23 @@ export default function ProfileScreen() {
           >
             User: {loggedEmail}
           </Text>
-          <Button
-            title="Logout"
-            color="#f9013f"
-            onPress={() => {
-              setLoggedEmail("");
-              setToken("");
-            }}
-          />
+          <View style={styles.rowContainer}>
+            <Button
+              title="Logout"
+              color="#f9013f"
+              onPress={() => {
+                setLoggedEmail("");
+                setToken("");
+              }}
+              disabled={isLoading}
+            />
+            <Button
+              title="Sync"
+              color="#f9013f"
+              onPress={() => handleSync()}
+              disabled={isLoading}
+            />
+          </View>
         </>
       )}
 
@@ -156,11 +177,16 @@ export default function ProfileScreen() {
         color="#f9013f"
         title="Clear History"
         onPress={handleClearHistory}
+        disabled={isLoading}
       ></Button>
     </View>
   );
 }
 const styles = StyleSheet.create({
+  rowContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   lightInput: {
     height: 40,
     width: "70%",
