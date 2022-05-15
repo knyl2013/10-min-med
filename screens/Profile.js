@@ -26,7 +26,6 @@ export default function ProfileScreen() {
     setIsLoading(true);
     const data = await AWSUtil.login(email, password);
     if (data.token) {
-      // setMessage("Login Successful");
       setMessage("");
       setToken(data.token);
       setLoggedEmail(data.user.email);
@@ -35,6 +34,7 @@ export default function ProfileScreen() {
       setMessage("Failed: " + data.message);
     }
     console.log(data);
+    setDays(JSON.stringify(data.user.completedDays));
     setIsLoading(false);
   };
   const handleRegister = async () => {
@@ -61,8 +61,14 @@ export default function ProfileScreen() {
       setMessage("Sync Failed: " + data.message);
     }
     console.log(data);
+    setDays(JSON.stringify(data.user.completedDays));
     setIsLoading(false);
   };
+  useEffect(() => {
+    if (!!days && !!JSON.parse(days).length && token) {
+      handleSync();
+    }
+  }, [days]);
   return (
     <View style={{ flex: 1, alignItems: "center", top: "20%" }}>
       <Switch
