@@ -59,9 +59,10 @@ export default function ProfileScreen() {
     );
     if (!data.synced) {
       setMessage("Sync Failed: " + data.message);
+    } else {
+      setDays(JSON.stringify(data.user.completedDays));
     }
     console.log(data);
-    setDays(JSON.stringify(data.user.completedDays));
     setIsLoading(false);
   };
   useEffect(() => {
@@ -159,15 +160,6 @@ export default function ProfileScreen() {
             onPress={handleRegister}
             disabled={isLoading}
           ></Button>
-          <Text
-            style={
-              isLightMode && JSON.parse(isLightMode)
-                ? styles.lightText
-                : styles.darkText
-            }
-          >
-            {message}
-          </Text>
         </>
       )}
       <Text
@@ -185,6 +177,15 @@ export default function ProfileScreen() {
         onPress={handleClearHistory}
         disabled={isLoading}
       ></Button>
+      <Text
+        style={
+          isLightMode && JSON.parse(isLightMode)
+            ? styles.lightText
+            : styles.darkText
+        }
+      >
+        {message}
+      </Text>
     </View>
   );
 }
