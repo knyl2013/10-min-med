@@ -116,3 +116,4 @@ dist
 .tern-port
 package-lock.json
 backend/deployment.zip
+deployment.zip
