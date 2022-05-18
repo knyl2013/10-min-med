@@ -12,6 +12,7 @@ import { AnimatedCircularProgress } from "react-native-circular-progress";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import * as DateUtil from "../util/DateUtil";
+import * as SoundUtil from "../util/SoundUtil";
 import { PersonContext } from "../App";
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -76,6 +77,7 @@ export default function MeditationScreen() {
           return;
         }
         if (seconds == 0) {
+          SoundUtil.playFinishedSound();
           setPause(true);
           Vibration.vibrate([500], true);
           setDays((prevDays) => {
