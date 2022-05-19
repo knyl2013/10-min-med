@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { PersonContext } from "../App";
 import * as AWSUtil from "../util/AWSUtil";
 import { setBadgeCountAsync } from "expo-notifications";
+import * as DateUtil from "../util/DateUtil";
 
 export default function ProfileScreen() {
   const {
@@ -34,7 +35,9 @@ export default function ProfileScreen() {
       setMessage("Failed: " + data.message);
     }
     console.log(data);
-    setDays(JSON.stringify(data.user.completedDays));
+    setDays(
+      JSON.stringify(DateUtil.merge(JSON.parse(days), data.user.completedDays))
+    );
     setIsLoading(false);
   };
   const handleRegister = async () => {
@@ -60,7 +63,11 @@ export default function ProfileScreen() {
     if (!data.synced) {
       setMessage("Sync Failed: " + data.message);
     } else {
-      setDays(JSON.stringify(data.user.completedDays));
+      setDays(
+        JSON.stringify(
+          DateUtil.merge(JSON.parse(days), data.user.completedDays)
+        )
+      );
     }
     console.log(data);
     setIsLoading(false);

@@ -46,3 +46,13 @@ export const isTodayDone = (days) => {
 export const getDateStr = (d) => {
   return d.toISOString().split("T")[0];
 };
+export const merge = (a, b) => {
+  const ans = [];
+  for (const item of a) {
+    ans.push(item);
+  }
+  for (const item of b) {
+    ans.push(item);
+  }
+  return ans.filter((v, i, a) => a.indexOf(v) === i).sort();
+};
