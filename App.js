@@ -22,6 +22,7 @@ export default function App() {
     "@IS_LIGHT_MODE",
     "false"
   );
+  const [isSilent, setIsSilent] = useAsyncStorage("@IS_SILENT", "true");
   useEffect(() => {
     activateKeepAwake();
   }, []);
@@ -36,6 +37,8 @@ export default function App() {
         setDays,
         isLightMode,
         setIsLightMode,
+        isSilent,
+        setIsSilent,
       }}
     >
       <NavigationContainer

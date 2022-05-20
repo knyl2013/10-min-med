@@ -32,7 +32,7 @@ Notifications.setNotificationHandler({
   }),
 });
 export default function MeditationScreen() {
-  const { loggedEmail, days, setDays, isLightMode, setIsLightMode } =
+  const { loggedEmail, days, setDays, isLightMode, setIsLightMode, isSilent } =
     useContext(PersonContext);
   const start = 60 * 10;
   const [seconds, setSeconds] = useState(start);
@@ -77,7 +77,9 @@ export default function MeditationScreen() {
           return;
         }
         if (seconds == 0) {
-          SoundUtil.playFinishedSound();
+          if (isSilent && !JSON.parse(isSilent)) {
+            SoundUtil.playFinishedSound();
+          }
           setPause(true);
           Vibration.vibrate([500], true);
           setDays((prevDays) => {

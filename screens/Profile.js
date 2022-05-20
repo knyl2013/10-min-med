@@ -16,6 +16,8 @@ export default function ProfileScreen() {
     setIsLightMode,
     days,
     setDays,
+    isSilent,
+    setIsSilent,
   } = useContext(PersonContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -88,6 +90,23 @@ export default function ProfileScreen() {
         value={isLightMode && JSON.parse(isLightMode)}
         activeText={"🌙"}
         inActiveText={"☀️"}
+        switchLeftPx={4}
+        switchRightPx={4}
+        backgroundActive={"#333"}
+        backgroundInactive={"#eee"}
+      />
+      <Text>
+        Silent Mode: {isSilent && JSON.parse(isSilent) ? "ON" : "OFF"}
+      </Text>
+      <Switch
+        onValueChange={() => {
+          setIsSilent((prevIsSilent) => {
+            return JSON.stringify(!JSON.parse(prevIsSilent));
+          });
+        }}
+        value={isSilent && JSON.parse(isSilent)}
+        activeText={"🔊"}
+        inActiveText={"🔇"}
         switchLeftPx={4}
         switchRightPx={4}
         backgroundActive={"#333"}
@@ -175,6 +194,7 @@ export default function ProfileScreen() {
             ? styles.lightText
             : styles.darkText
         }
+        numberOfLines={3}
       >
         Completed Days: {days}
       </Text>
@@ -199,7 +219,9 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+  },
+  colContainer: {
+    flex: 1,
   },
   lightInput: {
     height: 40,
