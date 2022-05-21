@@ -53,8 +53,23 @@ export default function ProfileScreen() {
     console.log(data);
     setIsLoading(false);
   };
-  const handleClearHistory = () => {
+  const handleClearHistory = async () => {
+    if (!confirm("Are you sure to clear all completed days record?")) return;
     setDays("[]");
+    if (loggedEmail && token && !confirm("Also delete cloud data?")) return;
+    if (loggedEmail && token) {
+      setIsLoading(true);
+      const data = await AWSUtil.sync(
+        { email: loggedEmail, completedDays: "[]" },
+        token,
+        true
+      );
+      if (!data.synced) {
+        setMessage("Sync Failed: " + data.message);
+      }
+      console.log(data);
+      setIsLoading(false);
+    }
   };
   const handleSync = async () => {
     setIsLoading(true);
@@ -95,7 +110,13 @@ export default function ProfileScreen() {
         backgroundActive={"#333"}
         backgroundInactive={"#eee"}
       />
-      <Text>
+      <Text
+        style={
+          isLightMode && JSON.parse(isLightMode)
+            ? styles.lightText
+            : styles.darkText
+        }
+      >
         Silent Mode: {isSilent && JSON.parse(isSilent) ? "ON" : "OFF"}
       </Text>
       <Switch
@@ -198,12 +219,14 @@ export default function ProfileScreen() {
       >
         Completed Days: {days}
       </Text>
-      <Button
-        color="#f9013f"
-        title="Clear History"
-        onPress={handleClearHistory}
-        disabled={isLoading}
-      ></Button>
+      {days != "[]" && (
+        <Button
+          color="#f9013f"
+          title="Clear History"
+          onPress={handleClearHistory}
+          disabled={isLoading}
+        ></Button>
+      )}
       <Text
         style={
           isLightMode && JSON.parse(isLightMode)

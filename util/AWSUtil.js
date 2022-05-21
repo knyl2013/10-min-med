@@ -26,7 +26,7 @@ export const register = async (email, password) => {
   return await response.json();
 };
 
-export const sync = async (user, token) => {
+export const sync = async (user, token, replace) => {
   console.log(user, token);
   // POST request using fetch with async/await
   const requestOptions = {
@@ -35,7 +35,7 @@ export const sync = async (user, token) => {
       "Content-Type": "application/json",
       "x-api-key": env.API_KEY,
     },
-    body: JSON.stringify({ user: user, token: token }),
+    body: JSON.stringify({ user: user, token: token, replace: !!replace }),
   };
   const response = await fetch(env.BASE_URL + "/sync", requestOptions);
   return await response.json();

@@ -21,6 +21,7 @@ async function sync(requestBody) {
   }
   const user = requestBody.user;
   const token = requestBody.token;
+  const replace = requestBody.replace;
   const completedDays = JSON.parse(user.completedDays);
   const verification = auth.verifyToken(user.email, token);
   const merge = (a, b) => {
@@ -37,7 +38,11 @@ async function sync(requestBody) {
     return util.buildResponse(401, verification);
   }
   const dynamoUser = await getUser(user.email);
-  dynamoUser.completedDays = merge(dynamoUser.completedDays, completedDays);
+  if (replace) {
+    dynamoUser.completedDays = completedDays;
+  } else {
+    dynamoUser.completedDays = merge(dynamoUser.completedDays, completedDays);
+  }
   saveUser(dynamoUser);
   const userInfo = {
     email: dynamoUser.email,
