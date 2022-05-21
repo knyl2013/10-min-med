@@ -44,7 +44,7 @@ export const isTodayDone = (days) => {
   return false;
 };
 export const getDateStr = (d) => {
-  return d.toISOString().split("T")[0];
+  return d.toLocaleString().split(",")[0];
 };
 export const merge = (a, b) => {
   const ans = [];
