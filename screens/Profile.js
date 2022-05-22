@@ -166,47 +166,45 @@ export default function ProfileScreen() {
 
       {!loggedEmail && (
         <>
-          <View style={{ flexDirection: "row" }}>
-            <TextInput
-              style={
-                isLightMode && JSON.parse(isLightMode)
-                  ? styles.lightInput
-                  : styles.darkInput
-              }
-              onChangeText={onChangeEmail}
-              placeholder="email"
-              keyboardType="email-address"
-              value={email}
-              editable={!isLoading}
-            />
+          <TextInput
+            style={
+              isLightMode && JSON.parse(isLightMode)
+                ? styles.lightInput
+                : styles.darkInput
+            }
+            onChangeText={onChangeEmail}
+            placeholder="email"
+            keyboardType="email-address"
+            value={email}
+            editable={!isLoading}
+          />
+          <TextInput
+            style={
+              isLightMode && JSON.parse(isLightMode)
+                ? styles.lightInput
+                : styles.darkInput
+            }
+            onChangeText={onChangePassword}
+            placeholder="password"
+            secureTextEntry={true}
+            keyboardType="default"
+            value={password}
+            editable={!isLoading}
+          />
+          <View style={styles.rowContainer}>
+            <Button
+              color="#f9013f"
+              title="Login"
+              onPress={handleLogin}
+              disabled={isLoading}
+            ></Button>
+            <Button
+              color="#f9013f"
+              title="Register"
+              onPress={handleRegister}
+              disabled={isLoading}
+            ></Button>
           </View>
-          <View style={{ flexDirection: "row" }}>
-            <TextInput
-              style={
-                isLightMode && JSON.parse(isLightMode)
-                  ? styles.lightInput
-                  : styles.darkInput
-              }
-              onChangeText={onChangePassword}
-              placeholder="password"
-              secureTextEntry={true}
-              keyboardType="default"
-              value={password}
-              editable={!isLoading}
-            />
-          </View>
-          <Button
-            color="#f9013f"
-            title="Login"
-            onPress={handleLogin}
-            disabled={isLoading}
-          ></Button>
-          <Button
-            color="#f9013f"
-            title="Register"
-            onPress={handleRegister}
-            disabled={isLoading}
-          ></Button>
         </>
       )}
       <Text
@@ -248,14 +246,14 @@ const styles = StyleSheet.create({
   },
   lightInput: {
     height: 40,
-    width: "70%",
+    width: "20%",
     margin: 12,
     borderWidth: 1,
     padding: 10,
   },
   darkInput: {
     height: 40,
-    width: "70%",
+    width: "20%",
     margin: 12,
     borderWidth: 1,
     padding: 10,
