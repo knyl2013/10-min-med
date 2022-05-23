@@ -54,9 +54,7 @@ export default function ProfileScreen() {
     setIsLoading(false);
   };
   const handleClearHistory = async () => {
-    if (!confirm("Are you sure to clear all completed days record?")) return;
     setDays("[]");
-    if (loggedEmail && token && !confirm("Also delete cloud data?")) return;
     if (loggedEmail && token) {
       setIsLoading(true);
       const data = await AWSUtil.sync(
@@ -213,7 +211,7 @@ export default function ProfileScreen() {
             ? styles.lightText
             : styles.darkText
         }
-        numberOfLines={3}
+        numberOfLines={1}
       >
         Completed Days: {days}
       </Text>
